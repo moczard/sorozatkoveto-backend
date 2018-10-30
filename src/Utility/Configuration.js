@@ -1,8 +1,9 @@
 const config = {
 	dbHost: process.env.DB_HOST || 'localhost',
 	dbPort: process.env.DB_PORT || '27017',
-	dbName: process.env.DB_NAME || 'movies',
+	dbName: process.env.DB_NAME || 'sorozatkoveto',
 	serverPort: process.env.SERVER_PORT || 3001,
+	tvMazeApiUrl: 'http://api.tvmaze.com'
 };
 
 export default config;
