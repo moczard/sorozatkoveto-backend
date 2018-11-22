@@ -4,30 +4,73 @@ class SeriesController {
 		this.api = api;
 	}
 
-	async getAll(req, res) {
+	async populateDB() {
 		try {
-			const series = await this.model.getAll();
-			res.send(series);
-		}
-		catch (err) {
-			console.error('Error in getting the series: ' + err);
-			res.send('Error');
-		}
-	}
+			let isLastPage = false;
+			let page = 0;
 
-	async populateDB(req, res) {
-		try {
-			console.log('Getting data from api');
-			const seriesData = await this.api.getSeriesData();
-			console.log('Successfully got data from api');
-			console.log('Populating db...');
-			await this.model.populateDB(seriesData);
-			console.log('Success');
-			res.send('Success');
+			while (!isLastPage) {
+				console.log(`Getting data from api page: ${page}`);
+				const seriesData = await this.api.getPageData(page);
+				console.log('Successfully got data from api');
+				console.log('Populating db...');
+				if (seriesData) {
+					await this.model.populateDB(seriesData);
+					console.log('Success');
+					page += 1;
+				} else {
+					isLastPage = true;
+				}
+			}
+			return true;
 		}
 		catch (err) {
 			console.error('Error in populating db : ' + err);
-			res.send('Error');
+			return null;
+		}
+	}
+
+	async getGenres() {
+		try {
+			const genres = await this.model.getGenres();
+			return genres;
+		}
+		catch (err) {
+			console.error('Error in getting the genres: ' + err);
+			return null;
+		}
+	}
+
+	async findByGenre(genre, skip, limit) {
+		try {
+			const hits = await this.model.findByGenre(genre, skip || 0, limit || 20);
+			return hits;
+		}
+		catch (err) {
+			console.error('Error in finding the series: ' + err);
+			return null;
+		}
+	}
+
+	async findByTitle(title, skip, limit) {
+		try {
+			const hits = await this.model.findByTitle(title, skip || 0, limit || 20);
+			return hits;
+		}
+		catch (err) {
+			console.error('Error in finding the series: ' + err);
+			return null;
+		}
+	}
+
+	async findAllByIds(ids) {
+		try {
+			const series = await this.model.findAllByIds(ids);
+			return series;
+		}
+		catch (err) {
+			console.error('Error in finding the series: ' + err);
+			return null;
 		}
 	}
 }

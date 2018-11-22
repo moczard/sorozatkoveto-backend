@@ -5,7 +5,10 @@ Mongoose.Promise = global.Promise;
 
 const connectToDb = async () => {
 	try {
-		await Mongoose.connect(`mongodb://${config.dbHost}:${config.dbPort}/${config.dbName}`);
+		await Mongoose.connect(
+			`mongodb://${config.dbHost}:${config.dbPort}/${config.dbName}`,
+			{ useNewUrlParser: true, useCreateIndex: true, }
+		);
 	}
 	catch (err) {
 		console.error(err);
