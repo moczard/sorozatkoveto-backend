@@ -9,7 +9,7 @@ const SeriesSchema = mongoose.Schema(
 		name: String,
 		genres: [String],
 		networkName: String,
-		imgage: String,
+		image: String,
 		summary: String,
 		seasons: [
 			{
@@ -48,7 +48,7 @@ SeriesModel.findByGenre = (genre, skip, limit) => {
 };
 
 SeriesModel.findByTitle = (title, skip, limit) => {
-	return SeriesModel.find({ name: { '$regex': title, '$options': 'i' } }, null, { skip: Number(skip) }).limit(Number(limit));
+	return SeriesModel.find({ name: { '$regex': '^' + title, '$options': 'i' } }, null, { skip: Number(skip) }).limit(Number(limit));
 };
 
 SeriesModel.findAllByIds = (ids) => {

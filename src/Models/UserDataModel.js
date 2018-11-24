@@ -24,7 +24,7 @@ UserDataModel.getByEmailHash = (emailHash) => {
 };
 
 UserDataModel.addUser = (user) => {
-	return UserDataModel.create(user);
+	return UserDataModel.updateOne({ emailHash: user.emailHash }, user, { upsert: true });
 };
 
 UserDataModel.addToWatched = (emailHash, seriesId, season, episode) => {
