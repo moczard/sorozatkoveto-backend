@@ -60,7 +60,7 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('findAllByIds', async (data) => {
-		const series = await seriesController.findAllByIds(JSON.parse(data.ids));
+		const series = await seriesController.findAllByIds(data.ids);
 		socket.emit('series', series);
 	});
 
@@ -78,6 +78,15 @@ io.on('connection', function (socket) {
 	socket.on('addToWatched', async (data) => {
 		const response = await userDataController.addToWatched(data.emailHash, data.seriesId, data.season, data.episode);
 		socket.emit('dbresponse', response);
+		const userData = await userDataController.getByEmailHash(data.emailHash);
+		socket.emit('user', userData);
+	});
+
+	socket.on('addToFollowed', async (data) => {
+		const response = await userDataController.addToFollowed(data.emailHash, data.seriesId);
+		socket.emit('dbresponse', response);
+		const userData = await userDataController.getByEmailHash(data.emailHash);
+		socket.emit('user', userData);
 	});
 
 	// ratings
@@ -91,9 +100,16 @@ io.on('connection', function (socket) {
 		socket.emit('ratings', ratings);
 	});
 
+	socket.on('findAllBySeriesIds', async (data) => {
+		const ratings = await ratingsController.findAllBySeriesIds(data.seriesIds);
+		socket.emit('ratings', ratings);
+	});
+
 	socket.on('addRatingsForEpisode', async (data) => {
 		const response = await ratingsController.addRatingsForEpisode(data.seriesId, data.season, data.episode, data.rating);
 		socket.emit('dbresponse', response);
+		socket.broadcast.emit('ratingsChange');
+		socket.emit('ratingsChange');
 	});
 });
 

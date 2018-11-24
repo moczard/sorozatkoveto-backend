@@ -25,6 +25,17 @@ class RatingsController {
 		}
 	}
 
+	async findAllBySeriesIds(seriesIds) {
+		try {
+			const ratings = await this.model.findAllBySeriesIds(seriesIds);
+			return ratings;
+		}
+		catch (err) {
+			console.error('Error in getting the ratings: ' + err);
+			return null;
+		}
+	}
+
 	async addRatingsForEpisode(seriesId, season, episode, rating) {
 		try {
 			const ratings = await this.model.findRatingsForEpisode(seriesId, season, episode);

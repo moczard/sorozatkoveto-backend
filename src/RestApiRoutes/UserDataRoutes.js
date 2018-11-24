@@ -41,5 +41,15 @@ router.post('/:emailHash', async (req, res) => {
 	}
 });
 
+router.post('/follow/:emailHash', async (req, res) => {
+	const response = await controller.addToFollowed(req.params.emailHash, req.body.seriesId);
+	if (response) {
+		res.send(response);
+	} else {
+		res.statusCode = 500;
+		res.send('Error');
+	}
+});
+
 
 export default router;

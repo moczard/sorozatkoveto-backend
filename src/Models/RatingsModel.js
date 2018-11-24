@@ -41,4 +41,9 @@ RatingsModel.addRatingsForEpisode = (seriesId, season, episode, rating) => {
 	);
 };
 
+RatingsModel.findAllBySeriesIds = (seriesIds) => {
+	return RatingsModel.find({ seriesId: { '$in': seriesIds } });
+};
+
+
 export default RatingsModel;

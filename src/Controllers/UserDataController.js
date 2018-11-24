@@ -16,8 +16,13 @@ class UserDataController {
 
 	async addUser(emailHash) {
 		try {
-			const dbResponse = await this.model.addUser({ emailHash, watchedEpisodes: [] });
-			return dbResponse;
+			const userData = await this.model.getByEmailHash(emailHash);
+			if(!userData.length) {
+				const dbResponse = await this.model.addUser({ emailHash, watchedEpisodes: [], followedSeries: [] });
+				return dbResponse;
+			}
+
+			return true;
 		}
 		catch (err) {
 			console.error('Error in adding user: ' + err);
@@ -32,6 +37,17 @@ class UserDataController {
 		}
 		catch (err) {
 			console.error('Error in adding watched episode: ' + err);
+			return null;
+		}
+	}
+
+	async addToFollowed(emailHash, seriesId) {
+		try {
+			const dbResponse = await this.model.addToFollowed(emailHash, seriesId);
+			return dbResponse;
+		}
+		catch (err) {
+			console.error('Error in adding followed episode: ' + err);
 			return null;
 		}
 	}

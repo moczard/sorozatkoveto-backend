@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 const UserDataSchema = mongoose.Schema(
 	{
 		emailHash: { type: String, required: true, unique: true, index: true },
+		followedSeries: [Number],
 		watchedEpisodes: [
 			{
 				seriesId: Number,
@@ -24,15 +25,28 @@ UserDataModel.getByEmailHash = (emailHash) => {
 };
 
 UserDataModel.addUser = (user) => {
-	return UserDataModel.updateOne({ emailHash: user.emailHash }, user, { upsert: true });
+	return UserDataModel.create(user);
 };
 
 UserDataModel.addToWatched = (emailHash, seriesId, season, episode) => {
 	return UserDataModel.updateOne(
 		{ emailHash },
-		{ $push:
+		{
+			$push:
 			{
 				watchedEpisodes: { seriesId: Number(seriesId), season: Number(season), episode: Number(episode) }
+			}
+		}
+	);
+};
+
+UserDataModel.addToFollowed = (emailHash, seriesId) => {
+	return UserDataModel.updateOne(
+		{ emailHash },
+		{
+			$push:
+			{
+				followedSeries: Number(seriesId)
 			}
 		}
 	);

@@ -46,5 +46,15 @@ router.post('/', async (req, res) => {
 	}
 });
 
+router.post('/ids', async (req, res) => {
+	const response = await controller.findAllBySeriesIds(req.body);
+	if (response) {
+		res.send(response);
+	} else {
+		res.statusCode = 500;
+		res.send('Error');
+	}
+});
+
 
 export default router;
